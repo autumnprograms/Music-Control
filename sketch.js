@@ -2,6 +2,11 @@ let handPose;
 let video;
 let hands = [];
 
+function preload()
+{
+	cinema = loadImage("absolute crushed.jpg");
+}
+
 async function setup() {
   createCanvas(640, 480);
   
@@ -37,4 +42,13 @@ function draw() {
 function gotHands(results) {
   // save the output to the hands variable
   hands = results;
+  
+  if (hands.length > 0) {
+	  let finger_one = hands[0].index_finger_mcp.y - hands[0].index_finger_tip.y;
+		
+	  // Check if either wrist x position <= 400
+	  if (finger_one < hands[0].index_finger_mcp.y + 100 && finger_one > hands[0].index_finger_mcp.y - 100) {
+			image(cinema, 0, 0,windowWidth,windowHeight);
+		}
+  }
 }
