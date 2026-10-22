@@ -45,6 +45,7 @@ function gotHands(results) {
   
   if (hands.length > 0) {
 	  let finger_one = hands[0].index_finger_mcp.y - hands[0].index_finger_tip.y;
+    console.log(finger_one);
 		
 	  // Check if either wrist x position <= 400
 	  if (finger_one < hands[0].index_finger_mcp.y + 100 && finger_one > hands[0].index_finger_mcp.y - 100) {
