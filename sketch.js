@@ -24,7 +24,6 @@ let isLoading = false;
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  // Create webcam video
   video = createCapture(VIDEO);
   video.size(640, 480);
   video.hide();
@@ -32,7 +31,7 @@ function setup() {
   songIndex = 3;
 }
 
-// Array matching your 4 loaded songs
+
 const songTitles = [
   "Mimi's Delivery Service",
   "Tell Me You Know",
@@ -43,12 +42,12 @@ const songTitles = [
 function drawUI(currentSongTitle, albumArtArray) {
   push();
 
-  // 1. Flat Bluish-Gray Background
+ 
   background(45, 52, 64);
 
-  // 2. Top Bar - 5 Circular Gesture Placeholders
+  
   const totalCircles = 5;
-  // Cap circle diameter relative to canvas width, maxing out at 60px
+  
   const circleDiameter = min(width * 0.1, 60);
   const spacing = width / (totalCircles + 1);
   const topY = min(height * 0.1, 50);
@@ -56,7 +55,7 @@ function drawUI(currentSongTitle, albumArtArray) {
   const overlayImages = [img5, img1, img2, img3, img4];
   const gestureLabels = ["pause", "vol up", "vol down", "prev", "next"];
 
-  // Standard uniform border for all circles
+  
   stroke(76, 86, 106);
   strokeWeight(2);
 
@@ -72,61 +71,58 @@ function drawUI(currentSongTitle, albumArtArray) {
       imageMode(CORNER);
     }
 
-    // Gesture Label directly under the circle
+   
     noStroke();
-    fill(216, 222, 233); // Soft white/gray text
+    fill(216, 222, 233); 
     textAlign(CENTER, TOP);
     textSize(11);
     textStyle(NORMAL);
     text(gestureLabels[i], xPos, topY + circleDiameter / 2 + 5);
   }
 
-  // 3. Lower Third - Player Card (Text Info)
-  // Cap card width to max out at 500px on ultra-wide screens
+
   const cardWidth = min(width - 80, 500);
   const cardHeight = 80;
-  const cardX = (width - cardWidth) / 2; // Keep card centered on any screen size
+  const cardX = (width - cardWidth) / 2; 
   const cardY = height - cardHeight - 25;
   const cardCenterX = width / 2;
 
-  // Outer Card Box
+
   noStroke();
-  fill(30, 34, 42, 220); // Semi-transparent dark slate
+  fill(30, 34, 42, 220);
   rect(cardX, cardY, cardWidth, cardHeight, 12);
 
-  // Dynamic Centered Song Title
+
   fill(236, 239, 244);
   textAlign(CENTER, CENTER);
   textSize(20);
   textStyle(BOLD);
   text(currentSongTitle, cardCenterX, cardY + 28);
 
-  // Static Centered Artist Name
+  
   fill(143, 188, 187);
   textSize(14);
   textStyle(NORMAL);
   text("Good Kid", cardCenterX, cardY + 54);
 
-  // 4. Centered Album Artwork (Capped for large screens)
-  // Calculate available vertical space between top circles/labels and bottom card
-  const labelOffsetY = 20; // Accounts for text height below circles
+
   const availableHeight = cardY - (topY + circleDiameter / 2 + labelOffsetY) - 20;
   
-  // Scale based on card width, but cap size based on max height constraints (max 280px)
+
   let albumSize = cardWidth - 40;
   albumSize = min(albumSize, availableHeight, 280); 
 
-  const albumX = (width - albumSize) / 2; // Centered horizontally
-  const albumY = cardY - albumSize - 15;  // Positioned cleanly above info bar
+  const albumX = (width - albumSize) / 2; 
+  const albumY = cardY - albumSize - 15; 
 
-  // Background frame / placeholder box
+  
   fill(30, 34, 42, 180);
   rect(albumX - 4, albumY - 4, albumSize + 8, albumSize + 8, 14);
 
   fill(59, 66, 82);
   rect(albumX, albumY, albumSize, albumSize, 10);
 
-  // Render current song album artwork
+ 
   let currentAlbumArt = albumArtArray ? albumArtArray[songIndex] : null;
   if (currentAlbumArt) {
     image(currentAlbumArt, albumX, albumY, albumSize, albumSize);
@@ -136,7 +132,7 @@ function drawUI(currentSongTitle, albumArtArray) {
 }
 
 function draw() {
-  // 1. Prompt user to interact if audio hasn't started yet
+
   if (!audioStarted) {
     background(30);
     fill(255);
@@ -146,7 +142,7 @@ function draw() {
     return;
   }
 
-  // 2. Display a loading message while assets & ml5 load
+
   if (isLoading) {
     background(30);
     fill(255);
@@ -156,12 +152,12 @@ function draw() {
     return;
   }
 
-  // 3. Main sketch execution.
+
   let currentTitle = songTitles[songIndex] || "Unknown Song";
   
-  // Render UI
+
   drawUI(currentTitle, albumCovers);
-  // Draw tracked keypoints
+ 
   for (let i = 0; i < hands.length; i++) {
     let hand = hands[i];
     for (let j = 0; j < hand.keypoints.length; j++) {
@@ -191,7 +187,7 @@ function draw() {
   }
 }
 
-// User interaction handler to unblock browser audio restrictions
+
 function mousePressed() {
   if (!audioStarted) {
     // Unlock Web Audio context
@@ -210,7 +206,7 @@ async function startApp() {
     handPose = model;
     handPose.detectStart(video, gotHands);
 
-    // Load Images
+
     img1 = await loadImagePromise("hand1.png");
     img2 = await loadImagePromise("hand2.png");
     img3 = await loadImagePromise("hand3.png");
@@ -223,7 +219,7 @@ async function startApp() {
     album4 = await loadImagePromise("ALBUM4.jpg");
     albumCovers = [album2, album4, album3, album1];
 
-    // Load Audio
+
     song1 = await loadSound("mimis-delivery-service.wav");
     song2 = await loadSound("tell-me-you-know.wav");
     song3 = await loadSound("coffee.wav");
@@ -237,7 +233,7 @@ async function startApp() {
   }
 }
 
-// Helper wrapper functions to use async/await with p5 loaders
+
 function loadImagePromise(path) {
   return new Promise((resolve, reject) => {
     loadImage(path, resolve, reject);
@@ -295,9 +291,8 @@ function gotHands(results) {
 
 function DoGestures() {
 
-  // Check if ALL gesture fingers are released/lowered
   if (!thumb && !index && !middle && !ring && !pinky) {
-    actionTaken = false; // Unlocks actionTaken while hand is still on screen!
+    actionTaken = false; 
     return;
   }
 
